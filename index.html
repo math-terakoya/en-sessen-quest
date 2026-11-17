@@ -521,7 +521,7 @@ function figBase() {
     seg: (a, b, c = 'w', w = 2.2, d = false, L = ask) => L.push({ k: 'seg', a, b, c, w, d }),
     dot: (p, c = 'w', r = 3.6) => ask.push({ k: 'dot', p, c, r }),
     lab: (p, s, c = 'w') => ask.push({ k: 'lab', p, s, c }),
-    ang: (v, a, b, s, c = 'mk', r = 18, L = ask) => L.push({ k: 'ang', v, a, b, s, c, r }),
+    ang: (v, a, b, s, c = 'mk', r = 22, L = ask) => L.push({ k: 'ang', v, a, b, s, c, r }),
     right: (v, a, b, c = 'mk', L = ask) => L.push({ k: 'right', v, a, b, c }),
     num: (a, b, s, c = 'cy', away = null, L = ask) => L.push({ k: 'num', a, b, s, c, away }),
   };
@@ -901,7 +901,7 @@ const GEN = {
   qOpp: rng => ({ arcs: pick(rng, ARCS4), rot: pick(rng, [190, 200, 210]) }),
   qExt: rng => ({ arcs: pick(rng, ARCS4), rot: pick(rng, [190, 200, 210]) }),
   qTap: rng => ({ arcs: pick(rng, ARCS4), rot: pick(rng, [190, 200, 210]) }),
-  qSum: rng => ({ arcs: pick(rng, ARCS4.filter(a => a[1] % 10 === 0 && a[2] % 10 === 0)), rot: pick(rng, [190, 200, 210]) }),
+  qSum: rng => ({ arcs: pick(rng, ARCS4.filter(a => a[1] !== a[2])), rot: pick(rng, [190, 200, 210]) }),   // 2つの 角が 同じだと 選択肢が かぶる
   tRight: rng => ({ x: pick(rng, [20, 25, 30, 35, 40, 50, 55]), rot: pick(rng, [200, 220, 250, 290, 320]), side: pick(rng, [1, -1]) }),
   tLen: rng => ({ t: pick(rng, TT), ask: 'AB' }),
   tTap: rng => ({ t: pick(rng, TT) }),
@@ -1223,7 +1223,7 @@ function drawSpec(ctx, W, H, d, spec, showAns, small) {
       if (it.fill) { ctx.fillStyle = 'rgba(255,216,74,0.55)'; ctx.beginPath(); ctx.moveTo(v[0], v[1]); ctx.arc(v[0], v[1], r, a1, a1 + dd, dd < 0); ctx.closePath(); ctx.fill(); }   // 問題の 角（タップの 問題）は きいろで ぬる
       if (it.s === '?') { ctx.fillStyle = 'rgba(255,159,67,0.45)'; ctx.beginPath(); ctx.moveTo(v[0], v[1]); ctx.arc(v[0], v[1], r, a1, a1 + dd, dd < 0); ctx.closePath(); ctx.fill(); }   // 問題の 角は 色で ぬる（「？」の 文字は 答えさせる ほうの イメージ なので 書かない。11-03 先生）
       ctx.strokeStyle = col; ctx.lineWidth = 1.6 * d; ctx.beginPath(); ctx.arc(v[0], v[1], r, a1, a1 + dd, dd < 0); ctx.stroke();
-      if (it.s && it.s !== '?') { const am = a1 + dd / 2, rr = Math.min(64 * d * fs, Math.max(r + 9 * d * fs, 7.5 * d * fs / Math.max(0.05, Math.sin(Math.abs(dd) / 2))));   /* 角が 小さい ときは 印を 外へ（となりの 印と 重ならない） */ textAt(ctx, d, it.s, v[0] + Math.cos(am) * rr, v[1] + Math.sin(am) * rr, col, (it.s === '?' ? 13 : 11) * fs); }
+      if (it.s && it.s !== '?') { const am = a1 + dd / 2, rr = Math.min(72 * d * fs, Math.max(r + 14 * d * fs, 11 * d * fs / Math.max(0.05, Math.sin(Math.abs(dd) / 2))));   /* 角が 小さい ときは 印を 外へ（となりの 印と 重ならない） */ textAt(ctx, d, it.s, v[0] + Math.cos(am) * rr, v[1] + Math.sin(am) * rr, col, 16 * fs); }   // 角度の 数字は 判断の 材料 → 大きく（11-17 先生「数字 小さい」）
     }
     if (kind === 'dot') { const q = X(it.p); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(q[0], q[1], it.r * d * fs, 0, Math.PI * 2); ctx.fill(); }
     if (kind === 'num') {
